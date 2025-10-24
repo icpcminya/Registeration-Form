@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ICPC Registration Form</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 20px;
+      }
+
+      .container {
+        background: white;
+        border-radius: 20px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        max-width: 600px;
+        width: 100%;
+        padding: 40px;
+        animation: slideUp 0.5s ease-out;
+      }
+
+      @keyframes slideUp {
+        from {
+          opacity: 0;
+          transform: translateY(30px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      h1 {
+        color: #333;
+        text-align: center;
+        margin-bottom: 10px;
+        font-size: 28px;
+      }
+
+      .subtitle {
+        text-align: center;
+        color: #666;
+        margin-bottom: 30px;
+        font-size: 14px;
+      }
+
+      .form-group {
+        margin-bottom: 25px;
+      }
+
+      label {
+        display: block;
+        margin-bottom: 8px;
+        color: #555;
+        font-weight: 600;
+        font-size: 14px;
+      }
+
+      label .required {
+        color: #e74c3c;
+      }
+
+      input {
+        width: 100%;
+        padding: 12px 15px;
+        border: 2px solid #e0e0e0;
+        border-radius: 8px;
+        font-size: 15px;
+        transition: all 0.3s ease;
+        font-family: inherit;
+      }
+
+      input:focus {
+        outline: none;
+        border-color: #667eea;
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+      }
+
+      input.error {
+        border-color: #e74c3c;
+      }
+
+      input.success {
+        border-color: #27ae60;
+      }
+
+      .error-message {
+        color: #e74c3c;
+        font-size: 12px;
+        margin-top: 5px;
+        display: none;
+      }
+
+      .error-message.show {
+        display: block;
+      }
+
+      .success-message {
+        color: #27ae60;
+        font-size: 12px;
+        margin-top: 5px;
+        display: none;
+      }
+
+      .success-message.show {
+        display: block;
+      }
+
+      .validation-status {
+        font-size: 12px;
+        margin-top: 5px;
+      }
+
+      .validating {
+        color: #3498db;
+      }
+
+      button {
+        width: 100%;
+        padding: 15px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        margin-top: 10px;
+      }
+
+      button:hover:not(:disabled) {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+      }
+
+      button:disabled {
+        background: #ccc;
+        cursor: not-allowed;
+      }
+
+      .loader {
+        display: none;
+        text-align: center;
+        margin-top: 20px;
+      }
+
+      .loader.show {
+        display: block;
+      }
+
+      .spinner {
+        border: 3px solid #f3f3f3;
+        border-top: 3px solid #667eea;
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        animation: spin 1s linear infinite;
+        margin: 0 auto;
+      }
+
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+
+      .alert {
+        padding: 15px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+        display: none;
+      }
+
+      .alert.show {
+        display: block;
+      }
+
+      .alert-success {
+        background-color: #d4edda;
+        color: #155724;
+        border: 1px solid #c3e6cb;
+      }
+
+      .alert-error {
+        background-color: #f8d7da;
+        color: #721c24;
+        border: 1px solid #f5c6cb;
+      }
+
+      .input-hint {
+        font-size: 12px;
+        color: #888;
+        margin-top: 4px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>ICPC Registration Form</h1>
+      <p class="subtitle">Please fill out all required fields</p>
+
+      <div id="alertBox" class="alert"></div>
+
+      <form id="registrationForm">
+        <div class="form-group">
+          <label for="nameEnglish"
+            >Name (English) <span class="required">*</span></label
+          >
+          <input
+            type="text"
+            id="nameEnglish"
+            name="nameEnglish"
+            required
+            placeholder="John Doe"
+          />
+          <div class="error-message" id="nameEnglishError"></div>
+        </div>
+
+        <div class="form-group">
+          <label for="nameArabic"
+            >Name (Arabic) <span class="required">*</span></label
+          >
+          <input
+            type="text"
+            id="nameArabic"
+            name="nameArabic"
+            required
+            placeholder="جون دو"
+            dir="rtl"
+          />
+          <div class="error-message" id="nameArabicError"></div>
+        </div>
+
+        <div class="form-group">
+          <label for="gmail"
+            >Gmail Address <span class="required">*</span></label
+          >
+          <input
+            type="email"
+            id="gmail"
+            name="gmail"
+            required
+            placeholder="example@gmail.com"
+          />
+          <div class="error-message" id="gmailError"></div>
+        </div>
+
+        <div class="form-group">
+          <label for="phoneNumber"
+            >Phone Number <span class="required">*</span></label
+          >
+          <input
+            type="tel"
+            id="phoneNumber"
+            name="phoneNumber"
+            required
+            placeholder="+20 123 456 7890"
+          />
+          <div class="error-message" id="phoneNumberError"></div>
+        </div>
+
+        <div class="form-group">
+          <label for="nationalId"
+            >National ID <span class="required">*</span></label
+          >
+          <input
+            type="text"
+            id="nationalId"
+            name="nationalId"
+            required
+            placeholder="12345678901234"
+          />
+          <div class="error-message" id="nationalIdError"></div>
+        </div>
+
+        <div class="form-group">
+          <label for="codeforcesHandle"
+            >Codeforces Handle <span class="required">*</span></label
+          >
+          <input
+            type="text"
+            id="codeforcesHandle"
+            name="codeforcesHandle"
+            required
+            placeholder="tourist"
+          />
+          <div class="input-hint">Enter your Codeforces username</div>
+          <div class="error-message" id="codeforcesHandleError"></div>
+          <div class="success-message" id="codeforcesHandleSuccess"></div>
+        </div>
+
+        <div class="loader" id="loader">
+          <div class="spinner"></div>
+          <p style="margin-top: 10px; color: #666">Submitting...</p>
+        </div>
+
+        <button type="submit" id="submitBtn">Submit Registration</button>
+      </form>
+    </div>
+
+    <script>
+      // Replace this URL with your Google Apps Script web app URL
+      const SCRIPT_URL = 'YOUR_GOOGLE_APPS_SCRIPT_URL_HERE';
+
+      const form = document.getElementById('registrationForm');
+      const submitBtn = document.getElementById('submitBtn');
+      const loader = document.getElementById('loader');
+      const alertBox = document.getElementById('alertBox');
+
+      // Validation functions
+      function validateEmail(email) {
+        const gmailPattern = /^[a-zA-Z0-9._%+-]+@gmail\.com$/;
+        return gmailPattern.test(email);
+      }
+
+      function validatePhone(phone) {
+        const phonePattern = /^[\d\s\+\-\(\)]+$/;
+        return (
+          phonePattern.test(phone) && phone.replace(/\D/g, '').length >= 10
+        );
+      }
+
+      function validateNationalId(id) {
+        const idPattern = /^\d{14}$/;
+        return idPattern.test(id);
+      }
+
+      function validateArabic(text) {
+        const arabicPattern = /[\u0600-\u06FF]/;
+        return arabicPattern.test(text);
+      }
+
+      async function validateCodeforcesHandle(handle) {
+        if (!handle || handle.trim() === '') {
+          return { valid: false, message: 'Handle cannot be empty' };
+        }
+
+        try {
+          const response = await fetch(
+            `https://codeforces.com/api/user.info?handles=${handle}`
+          );
+          const data = await response.json();
+
+          if (data.status === 'OK') {
+            return {
+              valid: true,
+              message: `✓ Valid Codeforces user: ${data.result[0].handle}`,
+            };
+          } else {
+            return { valid: false, message: 'Codeforces handle not found' };
+          }
+        } catch (error) {
+          return {
+            valid: false,
+            message: 'Error validating handle. Please try again.',
+          };
+        }
+      }
+
+      // Real-time validation
+      let codeforcesValidationTimeout;
+      document
+        .getElementById('codeforcesHandle')
+        .addEventListener('input', function (e) {
+          const handle = e.target.value.trim();
+          const errorDiv = document.getElementById('codeforcesHandleError');
+          const successDiv = document.getElementById('codeforcesHandleSuccess');
+
+          errorDiv.classList.remove('show');
+          successDiv.classList.remove('show');
+
+          if (codeforcesValidationTimeout) {
+            clearTimeout(codeforcesValidationTimeout);
+          }
+
+          if (handle.length > 0) {
+            codeforcesValidationTimeout = setTimeout(async () => {
+              const result = await validateCodeforcesHandle(handle);
+              if (result.valid) {
+                e.target.classList.remove('error');
+                e.target.classList.add('success');
+                successDiv.textContent = result.message;
+                successDiv.classList.add('show');
+              } else {
+                e.target.classList.add('error');
+                e.target.classList.remove('success');
+                errorDiv.textContent = result.message;
+                errorDiv.classList.add('show');
+              }
+            }, 500);
+          }
+        });
+
+      document.getElementById('gmail').addEventListener('blur', function (e) {
+        const errorDiv = document.getElementById('gmailError');
+        if (e.target.value && !validateEmail(e.target.value)) {
+          e.target.classList.add('error');
+          errorDiv.textContent = 'Please enter a valid Gmail address';
+          errorDiv.classList.add('show');
+        } else {
+          e.target.classList.remove('error');
+          errorDiv.classList.remove('show');
+        }
+      });
+
+      document
+        .getElementById('phoneNumber')
+        .addEventListener('blur', function (e) {
+          const errorDiv = document.getElementById('phoneNumberError');
+          if (e.target.value && !validatePhone(e.target.value)) {
+            e.target.classList.add('error');
+            errorDiv.textContent = 'Please enter a valid phone number';
+            errorDiv.classList.add('show');
+          } else {
+            e.target.classList.remove('error');
+            errorDiv.classList.remove('show');
+          }
+        });
+
+      document
+        .getElementById('nationalId')
+        .addEventListener('blur', function (e) {
+          const errorDiv = document.getElementById('nationalIdError');
+          if (e.target.value && !validateNationalId(e.target.value)) {
+            e.target.classList.add('error');
+            errorDiv.textContent = 'National ID must be exactly 14 digits';
+            errorDiv.classList.add('show');
+          } else {
+            e.target.classList.remove('error');
+            errorDiv.classList.remove('show');
+          }
+        });
+
+      document
+        .getElementById('nameArabic')
+        .addEventListener('blur', function (e) {
+          const errorDiv = document.getElementById('nameArabicError');
+          if (e.target.value && !validateArabic(e.target.value)) {
+            e.target.classList.add('error');
+            errorDiv.textContent = 'Please enter Arabic characters';
+            errorDiv.classList.add('show');
+          } else {
+            e.target.classList.remove('error');
+            errorDiv.classList.remove('show');
+          }
+        });
+
+      function showAlert(message, type) {
+        alertBox.textContent = message;
+        alertBox.className = `alert alert-${type} show`;
+        setTimeout(() => {
+          alertBox.classList.remove('show');
+        }, 5000);
+      }
+
+      form.addEventListener('submit', async function (e) {
+        e.preventDefault();
+
+        // Get form values
+        const formData = {
+          nameEnglish: document.getElementById('nameEnglish').value.trim(),
+          nameArabic: document.getElementById('nameArabic').value.trim(),
+          gmail: document.getElementById('gmail').value.trim(),
+          phoneNumber: document.getElementById('phoneNumber').value.trim(),
+          nationalId: document.getElementById('nationalId').value.trim(),
+          codeforcesHandle: document
+            .getElementById('codeforcesHandle')
+            .value.trim(),
+        };
+
+        // Validate all fields
+        let isValid = true;
+
+        if (!formData.nameEnglish) {
+          isValid = false;
+          showAlert('Please enter your English name', 'error');
+          return;
+        }
+
+        if (!formData.nameArabic || !validateArabic(formData.nameArabic)) {
+          isValid = false;
+          showAlert('Please enter your Arabic name', 'error');
+          return;
+        }
+
+        if (!validateEmail(formData.gmail)) {
+          isValid = false;
+          showAlert('Please enter a valid Gmail address', 'error');
+          return;
+        }
+
+        if (!validatePhone(formData.phoneNumber)) {
+          isValid = false;
+          showAlert('Please enter a valid phone number', 'error');
+          return;
+        }
+
+        if (!validateNationalId(formData.nationalId)) {
+          isValid = false;
+          showAlert('National ID must be exactly 14 digits', 'error');
+          return;
+        }
+
+        // Validate Codeforces handle
+        loader.classList.add('show');
+        submitBtn.disabled = true;
+
+        const codeforcesValidation = await validateCodeforcesHandle(
+          formData.codeforcesHandle
+        );
+        if (!codeforcesValidation.valid) {
+          loader.classList.remove('show');
+          submitBtn.disabled = false;
+          showAlert(
+            'Invalid Codeforces handle: ' + codeforcesValidation.message,
+            'error'
+          );
+          return;
+        }
+
+        // Submit to Google Sheets
+        try {
+          const response = await fetch(SCRIPT_URL, {
+            method: 'POST',
+            mode: 'no-cors',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(formData),
+          });
+
+          // Note: no-cors mode doesn't allow reading the response
+          // We assume success if no error is thrown
+          loader.classList.remove('show');
+          submitBtn.disabled = false;
+          showAlert('Registration submitted successfully!', 'success');
+          form.reset();
+        } catch (error) {
+          loader.classList.remove('show');
+          submitBtn.disabled = false;
+          showAlert('Error submitting form. Please try again.', 'error');
+          console.error('Error:', error);
+        }
+      });
+    </script>
+  </body>
+</html>
