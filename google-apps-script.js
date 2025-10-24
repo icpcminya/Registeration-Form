@@ -6,8 +6,17 @@ function doPost(e) {
     // Get the active spreadsheet
     var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
     
-    // Parse the incoming JSON data
-    var data = JSON.parse(e.postData.contents);
+    // Parse the incoming data (URL-encoded or JSON)
+    var data;
+    if (e.parameter && e.parameter.data) {
+      // URL-encoded data
+      data = JSON.parse(e.parameter.data);
+    } else if (e.postData && e.postData.contents) {
+      // JSON data
+      data = JSON.parse(e.postData.contents);
+    } else {
+      data = {};
+    }
     
     // Check if this is the first row (add headers)
     if (sheet.getLastRow() === 0) {
@@ -33,26 +42,38 @@ function doPost(e) {
       data.codeforcesHandle
     ]);
     
-    // Return success response
-    return ContentService.createTextOutput(JSON.stringify({
+    // Return success response with CORS headers
+    var output = ContentService.createTextOutput(JSON.stringify({
       'status': 'success',
       'message': 'Data added successfully'
-    })).setMimeType(ContentService.MimeType.JSON);
+    }));
+    output.setMimeType(ContentService.MimeType.JSON);
+    return output;
     
   } catch (error) {
-    // Return error response
-    return ContentService.createTextOutput(JSON.stringify({
+    // Return error response with CORS headers
+    var output = ContentService.createTextOutput(JSON.stringify({
       'status': 'error',
       'message': error.toString()
-    })).setMimeType(ContentService.MimeType.JSON);
+    }));
+    output.setMimeType(ContentService.MimeType.JSON);
+    return output;
   }
 }
 
 function doGet(e) {
-  return ContentService.createTextOutput(JSON.stringify({
+  var output = ContentService.createTextOutput(JSON.stringify({
     'status': 'success',
     'message': 'GET requests are not supported. Please use POST.'
-  })).setMimeType(ContentService.MimeType.JSON);
+  }));
+  output.setMimeType(ContentService.MimeType.JSON);
+  return output;
+}
+
+function doOptions(e) {
+  var output = ContentService.createTextOutput('');
+  output.setMimeType(ContentService.MimeType.TEXT);
+  return output;
 }
 
 // Test function - you can run this to test if the script has access to your sheet

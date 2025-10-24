@@ -316,7 +316,7 @@
 
     <script>
       // Replace this URL with your Google Apps Script web app URL
-      const SCRIPT_URL = 'YOUR_GOOGLE_APPS_SCRIPT_URL_HERE';
+      const SCRIPT_URL = '';
 
       const form = document.getElementById('registrationForm');
       const submitBtn = document.getElementById('submitBtn');
@@ -536,21 +536,36 @@
 
         // Submit to Google Sheets
         try {
+          // Convert to URL-encoded format
+          const urlEncodedData = new URLSearchParams();
+          urlEncodedData.append('data', JSON.stringify(formData));
+
           const response = await fetch(SCRIPT_URL, {
             method: 'POST',
-            mode: 'no-cors',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(formData),
+            body: urlEncodedData,
+            redirect: 'follow',
           });
 
-          // Note: no-cors mode doesn't allow reading the response
-          // We assume success if no error is thrown
+          const result = await response.json();
+
           loader.classList.remove('show');
           submitBtn.disabled = false;
-          showAlert('Registration submitted successfully!', 'success');
-          form.reset();
+
+          if (result.status === 'success') {
+            showAlert('Registration submitted successfully!', 'success');
+            form.reset();
+            // Reset all validation classes
+            document.querySelectorAll('input').forEach((input) => {
+              input.classList.remove('error', 'success');
+            });
+            document
+              .querySelectorAll('.error-message, .success-message')
+              .forEach((msg) => {
+                msg.classList.remove('show');
+              });
+          } else {
+            showAlert('Error submitting form. Please try again.', 'error');
+          }
         } catch (error) {
           loader.classList.remove('show');
           submitBtn.disabled = false;
